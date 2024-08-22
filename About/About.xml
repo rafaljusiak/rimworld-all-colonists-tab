@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ModMetaData>
+	<name>Pawn Timeline</name>
+	<author>Rafal Jusiak</author>
+	<supportedVersions>
+		<li>1.5</li>
+	</supportedVersions>
+	<packageId>rafaljusiak.pawntimeline</packageId>
+	<description>TO-DO</description>
+</ModMetaData>
