@@ -1,3 +1,7 @@
+# Repository specific files
+
+DLLs/*.dll
+
 # User-specific files
 *.suo
 *.user
