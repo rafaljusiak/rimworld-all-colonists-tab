@@ -1,45 +1,18 @@
-using System.Collections.Generic;
+using HarmonyLib;
+using Verse;
 
 namespace PawnTimeline
 {
-    [Verse.StaticConstructorOnStartup]
-    public static class PawnTimeline
+
+    public class PawnTimeline : Mod
     {
-        static PawnTimeline()
+        private readonly PawnTimeline_Settings settings;
+
+        public PawnTimeline(ModContentPack content) : base(content)
         {
-            Verse.Log.Message("Hello, World!");
-        }
-    }
+            Harmony harmony = new Harmony("rafaljusiak.pawntimeline");
 
-    public static class PawnNameRetriever
-    {
-        public static List<string> GetPawnNames()
-        {
-            List<string> pawnNames = new List<string>();
-            foreach (Verse.Map map in Verse.Find.Maps)
-            {
-                foreach (Verse.Pawn pawn in map.mapPawns.AllPawns)
-                {
-                    pawnNames.Add(pawn.Name.ToStringFull);
-                }
-            }
-
-            return pawnNames;
-        }
-    }
-
-    [HarmonyLib.HarmonyPatch(typeof(Verse.Game), nameof(Verse.Game.LoadGame))]
-    public static class LoadGamePatch
-    {
-        public static void Postfix()
-        {
-            Verse.Log.Message("PawnTimeline loaded");
-
-            var pawnNames = PawnNameRetriever.GetPawnNames();
-            foreach (var name in pawnNames)
-            {
-                Verse.Log.Message(name);
-            }
+            settings = GetSettings<PawnTimeline_Settings>();
         }
     }
 }

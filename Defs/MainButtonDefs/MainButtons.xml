@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8">
+<Defs>
+	<MainButtonDef>
+		<defName>Timeline</defName>
+		<label>Timeline</label>
+		<description>View timeline of your pawns</description>
+		<tabWindowClass>PawnTimeline.Window</tabWindowClass>
+		<order>70</order>
+		<validWithoutMap>true</validWithoutMap>
+	</MainButtonDef>
+</Defs>
