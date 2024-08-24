@@ -11,13 +11,19 @@ namespace PawnTimeline
         public override void DoWindowContents(Rect inRect)
         {
             listing.Begin(inRect);
-            listing.Label("Here we go");
+            listing.Label("Alive pawns:");
 
-            var pawns = PawnRetriever.GetPlayerPawns();
+            var pawns = PawnRetriever.GetAlivePlayerPawns();
             foreach (var pawn in pawns)
             {
                 var joinDate = GetJoinDate(pawn);
                 listing.Label(pawn.Name.ToStringFull + " - " + joinDate);
+            }
+
+            var deadPawns = PawnRetriever.GetDeadPlayerPawns();
+            foreach (var pawn in deadPawns)
+            {
+                listing.Label(pawn.Name.ToStringFull);
             }
 
             listing.End();

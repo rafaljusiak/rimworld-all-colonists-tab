@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Verse;
 using RimWorld;
 
@@ -6,7 +7,7 @@ namespace PawnTimeline
 {
     public static class PawnRetriever
     {
-        public static List<Pawn> GetPlayerPawns()
+        public static List<Pawn> GetAlivePlayerPawns()
         {
             List<Pawn> pawns = new List<Pawn>();
 
@@ -25,6 +26,11 @@ namespace PawnTimeline
             }
 
             return pawns;
+        }
+
+        public static IEnumerable<Pawn> GetDeadPlayerPawns()
+        {
+            return Find.WorldPawns.AllPawnsDead.Where((Pawn p) => p.IsColonist);
         }
     }
 }
