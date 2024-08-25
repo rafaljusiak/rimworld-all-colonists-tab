@@ -10,6 +10,8 @@ namespace PawnTimeline
 
         public override void DoWindowContents(Rect inRect)
         {
+            Text.Font = GameFont.Small;
+
             listing.Begin(inRect);
             listing.Label("Alive pawns:");
 

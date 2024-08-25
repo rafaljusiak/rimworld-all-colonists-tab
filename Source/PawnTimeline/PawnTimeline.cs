@@ -11,6 +11,7 @@ namespace PawnTimeline
         public PawnTimeline(ModContentPack content) : base(content)
         {
             Harmony harmony = new Harmony("rafaljusiak.pawntimeline");
+            harmony.PatchAll();
 
             settings = GetSettings<PawnTimeline_Settings>();
         }
