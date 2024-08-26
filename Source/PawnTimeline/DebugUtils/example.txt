@@ -1,0 +1,153 @@
+Name = Wallis 'Romero' Romero
+aceProps = Verse.RaceProperties
+CurJob = null
+CurJobDef = null
+Downed = False
+Crawling = False
+CanAttackWhileCrawling = False
+Dead = True
+DeadOrDowned = True
+KindLabel = colonist
+InMentalState = False
+MentalState = null
+MentalStateDef = null
+InAggroMentalState = False
+Inspired = False
+Inspiration = null
+InspirationDef = null
+DrawPos = (205.5, 8.1, 193.5)
+VerbTracker = Verse.VerbTracker
+VerbProperties = System.Collections.Generic.List`1[Verse.VerbProperties]
+Tools = System.Collections.Generic.List`1[Verse.Tool]
+ShouldAvoidFences = False
+IsColonist = True
+IsFreeColonist = True
+IsFreeNonSlaveColonist = True
+IsCreepJoiner = False
+HostFaction = null
+SlaveFaction = null
+Ideo = Kriminul 2
+ShouldHaveIdeo = True
+Drafted = False
+IsPrisoner = False
+IsPrisonerOfColony = False
+IsSlave = False
+IsSlaveOfColony = False
+IsFreeman = True
+IsMutant = False
+IsDuplicate = False
+IsEntity = False
+IsShambler = False
+IsGhoul = False
+IsAwokenCorpse = False
+IsNonMutantAnimal = False
+HasShowGizmosOnCorpseHediff = False
+DevelopmentalStage = Adult
+GuestStatus = null
+IsColonistPlayerControlled = False
+IsColonyMech = False
+IsColonyMechPlayerControlled = False
+IsColonyMutant = False
+IsColonyMutantPlayerControlled = False
+IsPlayerControlled = False
+IngredientStackCells = Verse.Pawn+<get_IngredientStackCells>d__193
+InContainerEnclosed = False
+Corpse = Corpse_Human294749
+CarriedBy = null
+CanAttackWhenPathingBlocked = True
+LabelNoCount = Romero<color=#999999FF>, Drone</color>
+LabelShort = Romero
+LabelNoCountColored = <color=#D09B61FF>Romero</color><color=#999999FF>, Drone</color>
+NameShortColored = <color=#D09B61FF>Romero</color>
+NameFullColored = <color=#D09B61FF>Wallis Romero</color>
+LegalStatus = colonist
+TicksPerMoveCardinal = 400
+TicksPerMoveDiagonal = 450
+DescriptionDetailed = A baseline human, mostly unmodified by gene engineering and mostly unchanged by evolutionary pressures on non-Earth planets.
+DescriptionFlavor = A baseline human, mostly unmodified by gene engineering and mostly unchanged by evolutionary pressures on non-Earth planets.
+DescriptionHyperlinks = Verse.Pawn+<get_DescriptionHyperlinks>d__225
+Drawer = Verse.Pawn_DrawTracker
+HomeFaction = Atlia
+Deathresting = False
+HasDeathRefusalOrResurrecting = False
+Suspended = False
+DeadlifeDustFaction = Atlia
+HasPsylink = False
+OverseerSubject = null
+CombinedDisabledWorkTags = Intellectual, Artistic
+TraderKind = null
+TradeCurrency = Error retrieving value: Exception has been thrown by the target of an invocation.
+Goods = Error retrieving value: Exception has been thrown by the target of an invocation.
+RandomPriceFactorSeed = Error retrieving value: Exception has been thrown by the target of an invocation.
+TraderName = Error retrieving value: Exception has been thrown by the target of an invocation.
+CanTradeNow = False
+TradePriceImprovementOffsetForPlayer = 0
+BodySize = 1
+HealthScale = 1
+EquippedWornOrInventoryThings = System.Linq.Enumerable+ConcatNIterator`1[Verse.Thing]
+TargetPriorityFactor = 1
+TargetCurrentlyAimingAt = null
+LastAttackedTarget = Error retrieving value: Exception has been thrown by the target of an invocation.
+LastAttackTargetTick = Error retrieving value: Exception has been thrown by the target of an invocation.
+CurrentEffectiveVerb = RimWorld.Verb_MeleeAttackDamage(RightHand/Thing_Human220594_1_Smash)
+BillStack = RimWorld.BillStack
+InteractionCell = Error retrieving value: Exception has been thrown by the target of an invocation.
+SearchableContents = null
+AllComps = System.Collections.Generic.List`1[Verse.ThingComp]
+DrawColor = RGBA(1.000, 1.000, 1.000, 1.000)
+HitPoints = -1
+MaxHitPoints = 100
+MarketValue = 175
+RoyalFavorValue = 3
+OverrideGraphicIndex = null
+UIIconOverride = null
+EverSeenByPlayer = False
+StyleDef = null
+StyleSourcePrecept = null
+FlammableNow = True
+FireBulwark = False
+Destroyed = True
+Discarded = False
+Spawned = False
+SpawnedOrAnyParentSpawned = True
+SpawnedParentOrMe = Sarcophagus459287
+TickSpawned = -1
+Map = null
+MapHeld = Map-0-PlayerHome
+Position = (205, 0, 193)
+PositionHeld = (200, 0, 156)
+Rotation = 2
+Smeltable = False
+BurnableByRecipe = False
+ParentHolder = Corpse_Human294749
+Faction = Atlia
+ThingID = Human220594
+RotatedSize = (1, 1)
+CustomRectForSelector = null
+Label = Romero<color=#999999FF>, Drone</color>
+LabelCap = Romero<color=#999999FF>, Drone</color>
+LabelCapNoCount = Romero<color=#999999FF>, Drone</color>
+LabelNoParenthesis = human
+LabelNoParenthesisCap = Human
+ContentSource = Ludeon.RimWorld
+IngestibleNow = False
+Stuff = null
+DefaultGraphic = Single(path=UI/Misc/BadTexture, color=RGBA(1.000, 1.000, 1.000, 1.000), colorTwo=RGBA(1.000, 1.000, 1.000, 1.000))
+Graphic = Single(path=UI/Misc/BadTexture, color=RGBA(1.000, 1.000, 1.000, 1.000), colorTwo=RGBA(1.000, 1.000, 1.000, 1.000))
+InteractionCells = Error retrieving value: Exception has been thrown by the target of an invocation.
+AmbientTemperature = 17.56156
+Tile = 31297
+InCryptosleep = False
+IsOnHoldingPlatform = False
+TerrainAffordanceNeeded = null
+DrawPosHeld = (200.5, 5.0, 157.0)
+DrawSize = (1.0, 1.0)
+DrawColorTwo = RGBA(1.000, 1.000, 1.000, 1.000)
+LabelMouseover = Romero<color=#999999FF>, Drone</color>
+LabelShortCap = Romero
+
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+Verse.Log:Message (string)
+PawnTimeline.Window:DoWindowContents (UnityEngine.Rect)
+Verse.Window:InnerWindowOnGUI (int)
+UnityEngine.GUI:CallWindowDelegate (UnityEngine.GUI/WindowFunction,int,int,UnityEngine.GUISkin,int,single,single,UnityEngine.GUIStyle)

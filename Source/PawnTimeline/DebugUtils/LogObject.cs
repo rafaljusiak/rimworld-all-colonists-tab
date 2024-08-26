@@ -1,32 +1,48 @@
-namespace PawnTimeline.DebugUtils;
-
+using System;
 using System.Linq;
 using System.Reflection;
 using System.Text;
 
-public static class LogObject
+namespace PawnTimeline.DebugUtils
 {
-    public static string GetLogFor(object target)
+    public static class LogObject
     {
-        var properties =
-            from property in target.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance)
-            select new
-            {
-                Name = property.Name,
-                Value = property.GetValue(target, null)
-            };
-
-        var builder = new StringBuilder();
-
-        foreach (var property in properties)
+        public static string GetLogFor(object target)
         {
-            builder
-                .Append(property.Name)
-                .Append(" = ")
-                .Append(property.Value)
-                .AppendLine();
+            var properties =
+                from property in target.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance)
+                select new
+                {
+                    Name = property.Name,
+                    Value = GetValueSafely(property, target)
+                };
+
+            var builder = new StringBuilder();
+
+            foreach (var property in properties)
+            {
+                builder
+                    .Append(property.Name)
+                    .Append(" = ")
+                    .Append(property.Value)
+                    .AppendLine();
+            }
+
+            return builder.ToString();
         }
 
-        return builder.ToString();
+        private static string GetValueSafely(PropertyInfo property, object target)
+        {
+            try
+            {
+                var value = property.GetValue(target, null);
+                return value?.ToString() ?? "null";
+            }
+            catch (Exception ex)
+            {
+                return $"Error retrieving value: {ex.Message}";
+            }
+        }
     }
 }
+

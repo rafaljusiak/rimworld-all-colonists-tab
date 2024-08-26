@@ -1,6 +1,8 @@
 using RimWorld;
 using UnityEngine;
 using Verse;
+using PawnTimeline.DebugUtils;
+using System.Linq;
 
 namespace PawnTimeline
 {
@@ -23,6 +25,9 @@ namespace PawnTimeline
             }
 
             var deadPawns = PawnRetriever.GetDeadPlayerPawns();
+            var firstPawnLog = LogObject.GetLogFor(deadPawns.First());
+            Log.Message(firstPawnLog);
+
             foreach (var pawn in deadPawns)
             {
                 listing.Label(pawn.Name.ToStringFull);
