@@ -2,6 +2,7 @@ using RimWorld;
 using UnityEngine;
 using Verse;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 
 namespace PawnTimeline
@@ -10,16 +11,16 @@ namespace PawnTimeline
     {
         private readonly Listing_Standard listing = new Listing_Standard();
         private Vector2 scrollPosition;
-        private Pawn selectedPawn;
+        private PawnWithStats selectedPawnWithStats;
 
-        private IEnumerable<Pawn> alivePawns;
-        private IEnumerable<Pawn> deadPawns;
+        private IEnumerable<PawnWithStats> alivePawns;
+        private IEnumerable<PawnWithStats> deadPawns;
 
         public override void PreOpen()
         {
             base.PreOpen();
-            alivePawns = PawnRetriever.GetAlivePlayerPawns();
-            deadPawns = PawnRetriever.GetDeadPlayerPawns();
+            alivePawns = PawnRetriever.GetAlivePlayerPawns().Select(p => new PawnWithStats(p));
+            deadPawns = PawnRetriever.GetDeadPlayerPawns().Select(p => new PawnWithStats(p));
         }
 
         public override void DoWindowContents(Rect inRect)
@@ -46,22 +47,22 @@ namespace PawnTimeline
             listing.Begin(viewRect);
             listing.Label("Alive pawns:");
 
-            foreach (var pawn in alivePawns)
+            foreach (var p in alivePawns)
             {
-                if (Widgets.ButtonText(listing.GetRect(Text.LineHeight), pawn.Name.ToStringFull))
+                if (Widgets.ButtonText(listing.GetRect(Text.LineHeight), p.PawnInstance.Name.ToStringFull))
                 {
-                    selectedPawn = pawn;
+                    selectedPawnWithStats = p;
                 }
             }
 
             listing.GapLine();
             listing.Label("Dead pawns:");
 
-            foreach (var deadPawn in deadPawns)
+            foreach (var p in deadPawns)
             {
-                if (Widgets.ButtonText(listing.GetRect(Text.LineHeight), deadPawn.Name.ToStringFull))
+                if (Widgets.ButtonText(listing.GetRect(Text.LineHeight), p.PawnInstance.Name.ToStringFull))
                 {
-                    selectedPawn = deadPawn;
+                    selectedPawnWithStats = p;
                 }
             }
 
@@ -75,15 +76,16 @@ namespace PawnTimeline
         private void DrawPawnDetails(Rect rightPanelRect)
         {
             listing.Begin(rightPanelRect);
-            if (selectedPawn != null)
+            if (selectedPawnWithStats != null)
             {
-                listing.Label($"Details for: {selectedPawn.Name.ToStringFull}");
+                string pawnName = selectedPawnWithStats.PawnInstance.Name.ToStringFull;
+                listing.Label($"Details for: {pawnName}");
 
-                var joinDate = GetJoinDate(selectedPawn);
+                var joinDate = GetJoinDate(selectedPawnWithStats.PawnInstance);
                 listing.Label($"Join Date: {joinDate}");
 
                 listing.GapLine();
-                listing.Label($"More details about {selectedPawn.Name.ToStringFull}:");
+                listing.Label($"More details about {pawnName}:");
 
                 listing.Gap();
             }
