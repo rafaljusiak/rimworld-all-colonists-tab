@@ -3,6 +3,8 @@ using UnityEngine;
 using Verse;
 using System;
 
+using PawnTimeline.DebugUtils;
+
 namespace PawnTimeline
 {
     internal class Window : MainTabWindow
@@ -35,6 +37,9 @@ namespace PawnTimeline
 
         private static string GetJoinDate(Pawn pawn)
         {
+            int tileIndex = Find.CurrentMap.Tile;
+            Vector2 tilePosition = Find.WorldGrid.LongLatOf(tileIndex);
+
             try
             {
                 if (pawn.Dead)
@@ -44,18 +49,18 @@ namespace PawnTimeline
                         return "Join date unknown (no corpse)";
                     }
 
-                    int deathTick = pawn.Corpse.timeOfDeath;
+                    int deathTick = GenTicks.TicksAbs - pawn.Corpse.Age;
                     int timeAsColonist = pawn.records.GetAsInt(RecordDefOf.TimeAsColonistOrColonyAnimal);
                     int joinTick = deathTick - timeAsColonist;
 
-                    string joinDate = GenDate.DateFullStringAt(joinTick, Find.WorldGrid.LongLatOf(pawn.Map.Tile));
+                    string joinDate = GenDate.DateFullStringAt(joinTick, tilePosition);
                     return joinDate;
                 }
                 else
                 {
                     int timeAsColonist = pawn.records.GetAsInt(RecordDefOf.TimeAsColonistOrColonyAnimal);
                     int joinTick = GenTicks.TicksAbs - timeAsColonist;
-                    string joinDate = GenDate.DateFullStringAt(joinTick, Find.WorldGrid.LongLatOf(pawn.Map.Tile));
+                    string joinDate = GenDate.DateFullStringAt(joinTick, tilePosition);
                     return joinDate;
                 }
             }
