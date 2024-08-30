@@ -7,7 +7,7 @@ namespace PawnTimeline
 {
     public static class PawnRetriever
     {
-        public static List<Pawn> GetAlivePlayerPawns()
+        public static IEnumerable<Pawn> GetAlivePlayerPawns()
         {
             List<Pawn> pawns = new List<Pawn>();
 

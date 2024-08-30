@@ -18,8 +18,11 @@ namespace PawnTimeline
         public override void PreOpen()
         {
             base.PreOpen();
-            alivePawns = PawnRetriever.GetAlivePlayerPawns().Select(p => new PawnWithStats(p));
-            deadPawns = PawnRetriever.GetDeadPlayerPawns().Select(p => new PawnWithStats(p));
+            int tileIndex = Find.CurrentMap.Tile;
+            Vector2 tilePosition = Find.WorldGrid.LongLatOf(tileIndex);
+
+            alivePawns = PawnRetriever.GetAlivePlayerPawns().Select(p => new PawnWithStats(p, tilePosition));
+            deadPawns = PawnRetriever.GetDeadPlayerPawns().Select(p => new PawnWithStats(p, tilePosition));
         }
 
         public override void DoWindowContents(Rect inRect)
@@ -80,11 +83,19 @@ namespace PawnTimeline
                 string pawnName = selectedPawnWithStats.PawnInstance.Name.ToStringFull;
                 listing.Label($"Details for: {pawnName}");
 
+                var birthdayDate = selectedPawnWithStats.BirthdayDate;
+                listing.Label($"Born: {birthdayDate}");
+
                 var joinDate = selectedPawnWithStats.JoinDate;
-                listing.Label($"Join Date: {joinDate}");
+                listing.Label($"Join Date: {joinDate} (Age: {selectedPawnWithStats.JoinAge})");
+
+                if (selectedPawnWithStats.PawnInstance.Dead)
+                {
+                    listing.Label($"Died: {selectedPawnWithStats.DeathDate} (Age: {selectedPawnWithStats.DeathAge})");
+                }
 
                 listing.GapLine();
-                listing.Label($"More details about {pawnName}:");
+                listing.Label("More details:");
 
                 listing.Gap();
             }

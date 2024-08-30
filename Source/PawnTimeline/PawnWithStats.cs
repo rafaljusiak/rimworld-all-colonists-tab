@@ -9,19 +9,34 @@ namespace PawnTimeline
     public class PawnWithStats
     {
         public Pawn PawnInstance;
+        private Vector2 tilePosition;
 
-        public PawnWithStats(Pawn p)
+        public PawnWithStats(Pawn p, Vector2 tilePosition)
         {
             PawnInstance = p;
+            this.tilePosition = tilePosition;
+        }
+
+        public string BirthdayDate
+        {
+            get
+            {
+                try
+                {
+                    return GenDate.DateFullStringAt(birthdayTick, tilePosition);
+                }
+                catch (Exception ex)
+                {
+                    Log.Error($"Error retrieving birthday date for pawn {PawnInstance.Name}: {ex.Message}");
+                    return "Birthday date unknown";
+                }
+            }
         }
 
         public string JoinDate
         {
             get
             {
-                int tileIndex = Find.CurrentMap.Tile;
-                Vector2 tilePosition = Find.WorldGrid.LongLatOf(tileIndex);
-
                 try
                 {
                     if (PawnInstance.Dead)
@@ -31,19 +46,12 @@ namespace PawnTimeline
                             return "Join date unknown (no corpse)";
                         }
 
-                        int deathTick = GenTicks.TicksAbs - PawnInstance.Corpse.Age;
-                        int timeAsColonist = PawnInstance.records.GetAsInt(RecordDefOf.TimeAsColonistOrColonyAnimal);
                         int joinTick = deathTick - timeAsColonist;
-
-                        string joinDate = GenDate.DateFullStringAt(joinTick, tilePosition);
-                        return joinDate;
+                        return GenDate.DateFullStringAt(joinTick, tilePosition);
                     }
                     else
                     {
-                        int timeAsColonist = PawnInstance.records.GetAsInt(RecordDefOf.TimeAsColonistOrColonyAnimal);
-                        int joinTick = GenTicks.TicksAbs - timeAsColonist;
-                        string joinDate = GenDate.DateFullStringAt(joinTick, tilePosition);
-                        return joinDate;
+                        return GenDate.DateFullStringAt(joinTick, tilePosition);
                     }
                 }
                 catch (Exception ex)
@@ -53,5 +61,21 @@ namespace PawnTimeline
                 }
             }
         }
+
+        public string DeathDate
+        {
+            get
+            {
+                if (PawnInstance.Dead)
+                    return GenDate.DateFullStringAt(deathTick, tilePosition);
+
+                return null;
+            }
+        }
+
+        private int timeAsColonist { get { return PawnInstance.records.GetAsInt(RecordDefOf.TimeAsColonistOrColonyAnimal); } }
+        private long birthdayTick { get { return PawnInstance.ageTracker.BirthAbsTicks; } }
+        private int joinTick { get { return GenTicks.TicksAbs - PawnInstance.records.GetAsInt(RecordDefOf.TimeAsColonistOrColonyAnimal); } }
+        private int deathTick { get { return GenTicks.TicksAbs - PawnInstance.Corpse.Age; } }
     }
 }
