@@ -1,7 +1,6 @@
 # Repository specific files
 
-DLLs/*.dll
-ExampleData/*
+example.txt
 
 # User-specific files
 *.suo
