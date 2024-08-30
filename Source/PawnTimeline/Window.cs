@@ -2,14 +2,25 @@ using RimWorld;
 using UnityEngine;
 using Verse;
 using System;
+using System.Collections.Generic;
 
 namespace PawnTimeline
 {
     internal class Window : MainTabWindow
     {
         private readonly Listing_Standard listing = new Listing_Standard();
-        private Vector2 scrollPosition;  // To track the scroll position
+        private Vector2 scrollPosition;
         private Pawn selectedPawn;
+
+        private IEnumerable<Pawn> alivePawns;
+        private IEnumerable<Pawn> deadPawns;
+
+        public override void PreOpen()
+        {
+            base.PreOpen();
+            alivePawns = PawnRetriever.GetAlivePlayerPawns();
+            deadPawns = PawnRetriever.GetDeadPlayerPawns();
+        }
 
         public override void DoWindowContents(Rect inRect)
         {
@@ -21,6 +32,12 @@ namespace PawnTimeline
             Rect leftPanelRect = new Rect(0, 0, leftPanelWidth, inRect.height);
             Rect rightPanelRect = new Rect(leftPanelWidth, 0, rightPanelWidth, inRect.height);
 
+            DrawPawns(leftPanelRect, inRect, leftPanelWidth);
+            DrawPawnDetails(rightPanelRect);
+        }
+
+        private void DrawPawns(Rect leftPanelRect, Rect inRect, float leftPanelWidth)
+        {
             Rect scrollRect = new Rect(0, 0, leftPanelWidth, inRect.height - 50);
             Rect viewRect = new Rect(0, 0, leftPanelWidth - 16, 1000);
 
@@ -29,8 +46,7 @@ namespace PawnTimeline
             listing.Begin(viewRect);
             listing.Label("Alive pawns:");
 
-            var pawns = PawnRetriever.GetAlivePlayerPawns();
-            foreach (var pawn in pawns)
+            foreach (var pawn in alivePawns)
             {
                 if (Widgets.ButtonText(listing.GetRect(Text.LineHeight), pawn.Name.ToStringFull))
                 {
@@ -41,7 +57,6 @@ namespace PawnTimeline
             listing.GapLine();
             listing.Label("Dead pawns:");
 
-            var deadPawns = PawnRetriever.GetDeadPlayerPawns();
             foreach (var deadPawn in deadPawns)
             {
                 if (Widgets.ButtonText(listing.GetRect(Text.LineHeight), deadPawn.Name.ToStringFull))
@@ -54,10 +69,7 @@ namespace PawnTimeline
             listing.Gap();
 
             listing.End();
-
             Widgets.EndScrollView();
-
-            DrawPawnDetails(rightPanelRect);
         }
 
         private void DrawPawnDetails(Rect rightPanelRect)
