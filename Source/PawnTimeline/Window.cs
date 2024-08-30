@@ -1,7 +1,6 @@
 using RimWorld;
 using UnityEngine;
 using Verse;
-using System;
 using System.Linq;
 using System.Collections.Generic;
 
@@ -81,7 +80,7 @@ namespace PawnTimeline
                 string pawnName = selectedPawnWithStats.PawnInstance.Name.ToStringFull;
                 listing.Label($"Details for: {pawnName}");
 
-                var joinDate = GetJoinDate(selectedPawnWithStats.PawnInstance);
+                var joinDate = selectedPawnWithStats.JoinDate;
                 listing.Label($"Join Date: {joinDate}");
 
                 listing.GapLine();
@@ -96,40 +95,5 @@ namespace PawnTimeline
             listing.End();
         }
 
-        private static string GetJoinDate(Pawn pawn)
-        {
-            int tileIndex = Find.CurrentMap.Tile;
-            Vector2 tilePosition = Find.WorldGrid.LongLatOf(tileIndex);
-
-            try
-            {
-                if (pawn.Dead)
-                {
-                    if (pawn.Corpse == null)
-                    {
-                        return "Join date unknown (no corpse)";
-                    }
-
-                    int deathTick = GenTicks.TicksAbs - pawn.Corpse.Age;
-                    int timeAsColonist = pawn.records.GetAsInt(RecordDefOf.TimeAsColonistOrColonyAnimal);
-                    int joinTick = deathTick - timeAsColonist;
-
-                    string joinDate = GenDate.DateFullStringAt(joinTick, tilePosition);
-                    return joinDate;
-                }
-                else
-                {
-                    int timeAsColonist = pawn.records.GetAsInt(RecordDefOf.TimeAsColonistOrColonyAnimal);
-                    int joinTick = GenTicks.TicksAbs - timeAsColonist;
-                    string joinDate = GenDate.DateFullStringAt(joinTick, tilePosition);
-                    return joinDate;
-                }
-            }
-            catch (Exception ex)
-            {
-                Log.Error($"Error retrieving join date for pawn {pawn.Name}: {ex.Message}");
-                return "Join date unknown";
-            }
-        }
     }
 }
