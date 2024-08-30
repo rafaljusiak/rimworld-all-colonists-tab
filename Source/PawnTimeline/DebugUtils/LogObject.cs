@@ -1,3 +1,6 @@
+using RimWorld;
+using Verse;
+
 using System;
 using System.Linq;
 using System.Reflection;
@@ -42,6 +45,32 @@ namespace PawnTimeline.DebugUtils
             {
                 return $"Error retrieving value: {ex.Message}";
             }
+        }
+
+        public static string GetRecordsFor(Pawn pawn)
+        {
+            if (pawn.records == null)
+                return "No records found for this pawn.";
+
+            var builder = new StringBuilder();
+
+            foreach (var recordDef in DefDatabase<RecordDef>.AllDefs)
+            {
+                switch (recordDef.type)
+                {
+                    case RecordType.Int:
+                        builder.AppendLine($"{recordDef.label}: {pawn.records.GetAsInt(recordDef)}");
+                        break;
+                    case RecordType.Time:
+                        builder.AppendLine($"{recordDef.label}: {pawn.records.GetAsInt(recordDef)}");
+                        break;
+                    case RecordType.Float:
+                        builder.AppendLine($"{recordDef.label}: {pawn.records.GetAsInt(recordDef)}");
+                        break;
+                }
+            }
+
+            return builder.ToString();
         }
     }
 }

@@ -151,3 +151,78 @@ Verse.Log:Message (string)
 PawnTimeline.Window:DoWindowContents (UnityEngine.Rect)
 Verse.Window:InnerWindowOnGUI (int)
 UnityEngine.GUI:CallWindowDelegate (UnityEngine.GUI/WindowFunction,int,int,UnityEngine.GUISkin,int,single,single,UnityEngine.GUIStyle)
+
+
+kills: 22
+kills (humanlikes): 0
+kills (animals): 22
+kills (mechanoids): 0
+enemies downed: 22
+enemies downed (humanlikes): 0
+enemies downed (animals): 22
+enemies downed (mechanoids): 0
+shots fired: 0
+headshots: 0
+damage dealt: 22
+damage taken: 92
+times in mental state: 0
+times on fire: 0
+fires extinguished: 0
+operations received: 0
+operations performed: 0
+tends received: 5
+tends given: 0
+people captured: 0
+prisoners recruited: 0
+prisoners chatted: 0
+animals tamed: 0
+animals slaughtered: 22
+meals cooked: 0
+things constructed: 122
+things installed: 6
+things repaired: 12
+things crafted: 0
+things hauled: 346
+plants sown: 194
+plants harvested: 86
+cells mined: 4
+messes cleaned: 721
+research points researched: 0
+corpses buried: 4
+nutrition eaten: 58
+bodies stripped: 0
+things uninstalled: 1
+things deconstructed: 5
+artifacts activated: 0
+containers opened: 0
+switches flicked: 0
+time as a colonist: 2252720
+time hosted: 0
+time as a prisoner: 0
+time in a bed: 770720
+time in a bed for medical reasons: 51920
+time downed: 12800
+time finding food and eating: 86240
+time spent on entertainment: 97760
+time under a roof: 1320640
+time drafted: 11040
+time on fire: 0
+time in mental state: 0
+time hauling: 279360
+time handling animals: 105600
+time firefighting: 0
+time wardening: 0
+time hunting: 0
+time constructing: 72800
+time treating and feeding: 0
+time researching: 0
+time cleaning: 92320
+time repairing: 11680
+time mining: 32320
+time sowing and harvesting: 87440
+
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+Verse.Log:Message (string)
+PawnTimeline.Window:DoWindowContents (UnityEngine.Rect)
+Verse.Window:InnerWindowOnGUI (int)
+UnityEngine.GUI:CallWindowDelegate (UnityEngine.GUI/WindowFunction,int,int,UnityEngine.GUISkin,int,single,single,UnityEngine.GUIStyle)
