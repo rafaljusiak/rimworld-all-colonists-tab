@@ -22,8 +22,10 @@ namespace PawnTimeline
             int tileIndex = Find.CurrentMap.Tile;
             Vector2 tilePosition = Find.WorldGrid.LongLatOf(tileIndex);
 
-            alivePawns = PawnRetriever.GetAlivePlayerPawns().Select(p => new PawnWithStats(p, tilePosition));
-            deadPawns = PawnRetriever.GetDeadPlayerPawns().Select(p => new PawnWithStats(p, tilePosition));
+            alivePawns = PawnRetriever.GetAlivePlayerPawns().Select(p => new PawnWithStats(p, tilePosition)).OrderBy(p => p.JoinTick);
+            deadPawns = PawnRetriever.GetDeadPlayerPawns().Select(p => new PawnWithStats(p, tilePosition)).OrderBy(
+                p => p.PawnInstance.Corpse == null ? -1 : p.JoinTick  // TODO: don't look at join tick -- look at the now-time_death-time_as_colonist (or smth)
+            );
         }
 
         public override void DoWindowContents(Rect inRect)

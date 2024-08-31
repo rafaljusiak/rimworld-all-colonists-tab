@@ -83,9 +83,11 @@ namespace PawnTimeline
             get { return PawnInstance.ageTracker.AgeBiologicalYears.ToString(); }
         }
 
+        public int JoinTick { get { return PawnInstance.Dead ? deathTick - timeAsColonist : joinTick; } }
+
+        private int joinTick { get { return GenTicks.TicksAbs - PawnInstance.records.GetAsInt(RecordDefOf.TimeAsColonistOrColonyAnimal); } }
         private int timeAsColonist { get { return PawnInstance.records.GetAsInt(RecordDefOf.TimeAsColonistOrColonyAnimal); } }
         private long birthdayTick { get { return PawnInstance.ageTracker.BirthAbsTicks; } }
-        private int joinTick { get { return GenTicks.TicksAbs - PawnInstance.records.GetAsInt(RecordDefOf.TimeAsColonistOrColonyAnimal); } }
         private int deathTick { get { return GenTicks.TicksAbs - PawnInstance.Corpse.Age; } }
 
         private string convertTicksToTimePeriod(long ticks)
