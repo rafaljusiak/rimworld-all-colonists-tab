@@ -1,6 +1,7 @@
 using RimWorld;
 using UnityEngine;
 using Verse;
+using System;
 using System.Linq;
 using System.Collections.Generic;
 
@@ -37,6 +38,7 @@ namespace PawnTimeline
 
             DrawPawns(leftPanelRect, inRect, leftPanelWidth);
             DrawPawnDetails(rightPanelRect);
+            DrawPawnGraphic(rightPanelRect);
         }
 
         private void DrawPawns(Rect leftPanelRect, Rect inRect, float leftPanelWidth)
@@ -106,6 +108,21 @@ namespace PawnTimeline
                 listing.Label("Select a pawn to see details.");
             }
             listing.End();
+        }
+
+        private void DrawPawnGraphic(Rect rightPanelRect)
+        {
+            if (selectedPawnWithStats != null)
+            {
+                float iconSize = 100f;
+                Rect pawnRect = new Rect(rightPanelRect.xMax - iconSize - 10, 0, iconSize, iconSize);
+
+                Vector2 pawnTextureSize = new Vector2(iconSize, iconSize);
+                Vector3 pawnTextureCameraOffset = new Vector3(0f, 0f, 0.3f);
+
+                var portrait = PortraitsCache.Get(selectedPawnWithStats.PawnInstance, pawnTextureSize, Rot4.South, pawnTextureCameraOffset, 1.28205f);
+                GUI.DrawTexture(pawnRect, portrait);
+            }
         }
 
     }
