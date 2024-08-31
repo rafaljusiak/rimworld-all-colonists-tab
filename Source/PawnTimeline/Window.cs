@@ -119,37 +119,37 @@ namespace PawnTimeline
                 var skills = selectedPawnWithStats.PawnInstance.skills;
                 if (skills != null)
                 {
-                    int skillsPerColumn = 4;
+                    float columnWidth = rightPanelRect.width / 3f;
+                    int skillsPerColumn = Mathf.CeilToInt(skills.skills.Count / 3f);
 
-                    for (int i = 0; i < skills.skills.Count; i++)
+                    for (int i = 0; i < skillsPerColumn; i++)
                     {
-                        var skill = skills.skills[i];
-                        string skillLabel = skill.def.label.CapitalizeFirst();
-                        int skillLevel = skill.Level;
-
-                        Color skillColor = skillLevel switch
+                        for (int col = 0; col < 3; col++)
                         {
-                            >= 12 => Color.green,
-                            >= 6 => Color.yellow,
-                            _ => Color.red
-                        };
+                            int skillIndex = i + col * skillsPerColumn;
+                            if (skillIndex >= skills.skills.Count) break;
 
-                        Rect skillRect = listing.GetRect(Text.LineHeight);
-                        float columnWidth = skillRect.width / 3f;
-                        Rect labelRect = new Rect(skillRect.x, skillRect.y, columnWidth, skillRect.height);
-                        Rect numberRect = new Rect(skillRect.x + columnWidth, skillRect.y, columnWidth, skillRect.height);
+                            var skill = skills.skills[skillIndex];
+                            string skillLabel = skill.def.label.CapitalizeFirst();
+                            int skillLevel = skill.Level;
 
-                        Widgets.Label(labelRect, $"{skillLabel}: ");
+                            Color skillColor = skillLevel switch
+                            {
+                                >= 12 => Color.green,
+                                >= 6 => Color.yellow,
+                                _ => Color.red
+                            };
 
-                        GUI.color = skillColor;
-                        Widgets.Label(numberRect, skillLevel.ToString());
+                            Rect skillRect = new Rect(col * columnWidth, listing.CurHeight, columnWidth, Text.LineHeight);
 
-                        GUI.color = Color.white;
+                            Widgets.Label(new Rect(skillRect.x, skillRect.y, columnWidth * 0.6f, skillRect.height), $"{skillLabel}: ");
 
-                        if ((i + 1) % skillsPerColumn == 0 && i != skills.skills.Count - 1)
-                        {
-                            listing.Gap(Text.LineHeight);
+                            GUI.color = skillColor;
+                            Widgets.Label(new Rect(skillRect.x + columnWidth * 0.6f, skillRect.y, columnWidth * 0.4f, skillRect.height), skillLevel.ToString());
+
+                            GUI.color = Color.white;
                         }
+                        listing.Gap(Text.LineHeight);
                     }
                 }
                 else
