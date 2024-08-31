@@ -90,8 +90,10 @@ namespace PawnTimeline
                     return;
                 }
 
+                Text.Font = GameFont.Medium;
                 string pawnName = selectedPawnWithStats.PawnInstance.Name.ToStringFull;
                 listing.Label(pawnName);
+                Text.Font = GameFont.Small;
 
                 var birthdayDate = selectedPawnWithStats.BirthdayDate;
                 listing.Label($"Born: {birthdayDate}");
@@ -110,7 +112,6 @@ namespace PawnTimeline
 
                 listing.Label($"Time as a colonist: {selectedPawnWithStats.TimeAsColonist}");
 
-                listing.Gap();
                 listing.GapLine();
                 listing.Gap();
 
