@@ -73,9 +73,27 @@ namespace PawnTimeline
             }
         }
 
+        public string TimeAsColonist
+        {
+            get { return convertTicksToTimePeriod(timeAsColonist); }
+        }
+
         private int timeAsColonist { get { return PawnInstance.records.GetAsInt(RecordDefOf.TimeAsColonistOrColonyAnimal); } }
         private long birthdayTick { get { return PawnInstance.ageTracker.BirthAbsTicks; } }
         private int joinTick { get { return GenTicks.TicksAbs - PawnInstance.records.GetAsInt(RecordDefOf.TimeAsColonistOrColonyAnimal); } }
         private int deathTick { get { return GenTicks.TicksAbs - PawnInstance.Corpse.Age; } }
+
+        private string convertTicksToTimePeriod(long ticks)
+        {
+            long years = ticks / GenDate.TicksPerYear;
+            ticks %= GenDate.TicksPerYear;
+
+            int ticksPerMonth = 15 * GenDate.TicksPerDay;
+            long months = ticks / (15 * GenDate.TicksPerDay);
+            ticks %= ticksPerMonth;
+
+            long days = ticks / GenDate.TicksPerDay;
+            return $"{years} years, {months} months, {days} days";
+        }
     }
 }

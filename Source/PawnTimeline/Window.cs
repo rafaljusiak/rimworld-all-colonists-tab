@@ -87,12 +87,14 @@ namespace PawnTimeline
                 listing.Label($"Born: {birthdayDate}");
 
                 var joinDate = selectedPawnWithStats.JoinDate;
-                listing.Label($"Join Date: {joinDate} (Age: {selectedPawnWithStats.JoinAge})");
+                listing.Label($"Join Date: {joinDate}");
 
                 if (selectedPawnWithStats.PawnInstance.Dead)
                 {
-                    listing.Label($"Died: {selectedPawnWithStats.DeathDate} (Age: {selectedPawnWithStats.DeathAge})");
+                    listing.Label($"Died: {selectedPawnWithStats.DeathDate}");
                 }
+
+                listing.Label($"Time as a colonist: {selectedPawnWithStats.TimeAsColonist}");
 
                 listing.GapLine();
                 listing.Label("More details:");
