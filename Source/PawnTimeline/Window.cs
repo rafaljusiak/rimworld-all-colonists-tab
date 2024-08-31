@@ -82,6 +82,13 @@ namespace PawnTimeline
             listing.Begin(rightPanelRect);
             if (selectedPawnWithStats != null)
             {
+                if (selectedPawnWithStats.PawnInstance.Dead && selectedPawnWithStats.PawnInstance.Corpse == null)
+                {
+                    listing.Label($"No corpse found for {selectedPawnWithStats.PawnInstance.Name} -- cannot display details.");
+                    listing.End();
+                    return;
+                }
+
                 string pawnName = selectedPawnWithStats.PawnInstance.Name.ToStringFull;
                 listing.Label($"Details for: {pawnName}");
 
@@ -114,6 +121,11 @@ namespace PawnTimeline
         {
             if (selectedPawnWithStats != null)
             {
+                if (selectedPawnWithStats.PawnInstance.Dead && selectedPawnWithStats.PawnInstance.Corpse == null)
+                {
+                    return;
+                }
+
                 float iconSize = 100f;
                 Rect pawnRect = new Rect(rightPanelRect.xMax - iconSize - 10, 0, iconSize, iconSize);
 
@@ -124,6 +136,5 @@ namespace PawnTimeline
                 GUI.DrawTexture(pawnRect, portrait);
             }
         }
-
     }
 }
