@@ -78,6 +78,11 @@ namespace PawnTimeline
             get { return convertTicksToTimePeriod(timeAsColonist); }
         }
 
+        public string BiologicalAge
+        {
+            get { return PawnInstance.ageTracker.AgeBiologicalYears.ToString(); }
+        }
+
         private int timeAsColonist { get { return PawnInstance.records.GetAsInt(RecordDefOf.TimeAsColonistOrColonyAnimal); } }
         private long birthdayTick { get { return PawnInstance.ageTracker.BirthAbsTicks; } }
         private int joinTick { get { return GenTicks.TicksAbs - PawnInstance.records.GetAsInt(RecordDefOf.TimeAsColonistOrColonyAnimal); } }
