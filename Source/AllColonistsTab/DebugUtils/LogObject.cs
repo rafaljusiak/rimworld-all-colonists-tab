@@ -6,7 +6,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 
-namespace PawnTimeline.DebugUtils
+namespace AllColonistsTab.DebugUtils
 {
     public static class LogObject
     {

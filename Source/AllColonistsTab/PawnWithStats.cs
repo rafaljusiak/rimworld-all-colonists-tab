@@ -4,7 +4,7 @@ using Verse;
 
 using System;
 
-namespace PawnTimeline
+namespace AllColonistsTab
 {
     public class PawnWithStats
     {

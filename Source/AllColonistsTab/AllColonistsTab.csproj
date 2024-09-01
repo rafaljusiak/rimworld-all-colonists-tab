@@ -1,8 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net48</TargetFramework>
-    <AssemblyTitle>PawnTimeline</AssemblyTitle>
-    <RootNamespace>PawnTimeline</RootNamespace>
+    <AssemblyTitle>AllColonistsTab</AssemblyTitle>
+    <RootNamespace>AllColonistsTab</RootNamespace>
     <OutputPath>../../Assemblies/</OutputPath>
     <LangVersion>latest</LangVersion>
 	<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>

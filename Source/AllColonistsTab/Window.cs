@@ -4,7 +4,7 @@ using Verse;
 using System.Linq;
 using System.Collections.Generic;
 
-namespace PawnTimeline
+namespace AllColonistsTab
 {
     internal class Window : MainTabWindow
     {

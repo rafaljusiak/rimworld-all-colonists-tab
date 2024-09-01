@@ -3,7 +3,7 @@ using System.Linq;
 using Verse;
 using RimWorld;
 
-namespace PawnTimeline
+namespace AllColonistsTab
 {
     public static class PawnRetriever
     {
