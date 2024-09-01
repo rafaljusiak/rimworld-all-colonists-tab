@@ -21,7 +21,7 @@ namespace PawnTimeline
             int tileIndex = Find.CurrentMap.Tile;
             Vector2 tilePosition = Find.WorldGrid.LongLatOf(tileIndex);
 
-            alivePawns = PawnRetriever.GetAlivePlayerPawns().Select(p => new PawnWithStats(p, tilePosition)).OrderBy(p => p.JoinTick);
+            alivePawns = PawnRetriever.GetAlivePlayerPawns().Select(p => new PawnWithStats(p, tilePosition)).OrderBy(p => p.JoinTick); // TODO: additionally sort by name
             deadPawns = PawnRetriever.GetDeadPlayerPawns().Select(p => new PawnWithStats(p, tilePosition)).OrderBy(
                 p => p.PawnInstance.Corpse == null ? -1 : p.JoinTick
             );
@@ -50,7 +50,7 @@ namespace PawnTimeline
             Widgets.BeginScrollView(scrollRect, ref scrollPosition, viewRect);
 
             listing.Begin(viewRect);
-            listing.Label("Alive pawns:");
+            listing.Label("Alive colonists:");
 
             foreach (var p in alivePawns)
             {
@@ -61,7 +61,7 @@ namespace PawnTimeline
             }
 
             listing.GapLine();
-            listing.Label("Dead pawns:");
+            listing.Label("Dead colonists:");
 
             foreach (var p in deadPawns)
             {

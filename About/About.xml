@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ModMetaData>
-	<name>Pawn Timeline</name>
+	<name>All Colonists Tab</name>
 	<author>Rafal Jusiak</author>
 	<supportedVersions>
 		<li>1.5</li>
 	</supportedVersions>
 	<packageId>rafaljusiak.pawntimeline</packageId>
-	<description>TO-DO</description>
+	<description>A simple tab that provides key information about both living and dead colonists. This is an early version of the mod, so it currently offers a limited set of information. However, I plan to add more feature over time, and your suggestions are highly welcome!</description>
 	<modDependencies>
 		<li>
 			<packageId>brrainz.harmony</packageId>
