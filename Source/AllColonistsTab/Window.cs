@@ -21,10 +21,16 @@ namespace AllColonistsTab
             int tileIndex = Find.CurrentMap.Tile;
             Vector2 tilePosition = Find.WorldGrid.LongLatOf(tileIndex);
 
-            alivePawns = PawnRetriever.GetAlivePlayerPawns().Select(p => new PawnWithStats(p, tilePosition)).OrderBy(p => p.JoinTick); // TODO: additionally sort by name
-            deadPawns = PawnRetriever.GetDeadPlayerPawns().Select(p => new PawnWithStats(p, tilePosition)).OrderBy(
-                p => p.PawnInstance.Corpse == null ? -1 : p.JoinTick
-            );
+            alivePawns = PawnRetriever
+                .GetAlivePlayerPawns()
+                .Select(p => new PawnWithStats(p, tilePosition))
+                .OrderBy(p => p.JoinTick)
+                .ThenBy(p => p.PawnInstance.Name.ToStringFull);
+
+            deadPawns = PawnRetriever
+                .GetDeadPlayerPawns()
+                .Select(p => new PawnWithStats(p, tilePosition))
+                .OrderBy(p => p.PawnInstance.Corpse == null ? -1 : p.JoinTick);
         }
 
         public override void DoWindowContents(Rect inRect)
