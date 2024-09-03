@@ -126,38 +126,7 @@ namespace AllColonistsTab
                 var skills = selectedPawnWithStats.PawnInstance.skills;
                 if (skills != null)
                 {
-                    float columnWidth = rightPanelRect.width / 3f;
-                    int skillsPerColumn = Mathf.CeilToInt(skills.skills.Count / 3f);
-
-                    for (int i = 0; i < skillsPerColumn; i++)
-                    {
-                        for (int col = 0; col < 3; col++)
-                        {
-                            int skillIndex = i + col * skillsPerColumn;
-                            if (skillIndex >= skills.skills.Count) break;
-
-                            var skill = skills.skills[skillIndex];
-                            string skillLabel = skill.def.label.CapitalizeFirst();
-                            int skillLevel = skill.Level;
-
-                            Color skillColor = skillLevel switch
-                            {
-                                >= 12 => Color.green,
-                                >= 6 => Color.yellow,
-                                _ => Color.red
-                            };
-
-                            Rect skillRect = new Rect(col * columnWidth, listing.CurHeight, columnWidth, Text.LineHeight);
-
-                            Widgets.Label(new Rect(skillRect.x, skillRect.y, columnWidth * 0.6f, skillRect.height), $"{skillLabel}: ");
-
-                            GUI.color = skillColor;
-                            Widgets.Label(new Rect(skillRect.x + columnWidth * 0.6f, skillRect.y, columnWidth * 0.4f, skillRect.height), skillLevel.ToString());
-
-                            GUI.color = Color.white;
-                        }
-                        listing.Gap(Text.LineHeight);
-                    }
+                    DrawSkills(rightPanelRect, skills);
                 }
                 else
                 {
@@ -194,6 +163,42 @@ namespace AllColonistsTab
                 {
                     CameraJumper.TryJumpAndSelect(selectedPawnWithStats.PawnInstance);
                 }
+            }
+        }
+
+        private void DrawSkills(Rect rightPanelRect, Pawn_SkillTracker skills)
+        {
+            float columnWidth = rightPanelRect.width / 3f;
+            int skillsPerColumn = Mathf.CeilToInt(skills.skills.Count / 3f);
+
+            for (int i = 0; i < skillsPerColumn; i++)
+            {
+                for (int col = 0; col < 3; col++)
+                {
+                    int skillIndex = i + col * skillsPerColumn;
+                    if (skillIndex >= skills.skills.Count) break;
+
+                    var skill = skills.skills[skillIndex];
+                    string skillLabel = skill.def.label.CapitalizeFirst();
+                    int skillLevel = skill.Level;
+
+                    Color skillColor = skillLevel switch
+                    {
+                        >= 12 => Color.green,
+                        >= 6 => Color.yellow,
+                        _ => Color.red
+                    };
+
+                    Rect skillRect = new Rect(col * columnWidth, listing.CurHeight, columnWidth, Text.LineHeight);
+
+                    Widgets.Label(new Rect(skillRect.x, skillRect.y, columnWidth * 0.6f, skillRect.height), $"{skillLabel}: ");
+
+                    GUI.color = skillColor;
+                    Widgets.Label(new Rect(skillRect.x + columnWidth * 0.6f, skillRect.y, columnWidth * 0.4f, skillRect.height), skillLevel.ToString());
+
+                    GUI.color = Color.white;
+                }
+                listing.Gap(Text.LineHeight);
             }
         }
     }
