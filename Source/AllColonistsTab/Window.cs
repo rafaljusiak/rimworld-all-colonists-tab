@@ -121,6 +121,7 @@ namespace AllColonistsTab
                 listing.GapLine();
                 listing.Gap();
 
+                // Skills
                 listing.Label("Skills:");
 
                 var skills = selectedPawnWithStats.PawnInstance.skills;
@@ -131,6 +132,62 @@ namespace AllColonistsTab
                 else
                 {
                     listing.Label("Skills information not available.");
+                }
+
+                // Traits
+                listing.GapLine();
+                listing.Label("Traits:");
+
+                var traits = selectedPawnWithStats.PawnInstance.story?.traits;
+                if (traits != null)
+                {
+                    DrawTraits(traits);
+                }
+                else
+                {
+                    listing.Label("Traits information not available.");
+                }
+
+                // Backstories
+                listing.GapLine();
+                listing.Label("Backstories:");
+
+                var story = selectedPawnWithStats.PawnInstance.story;
+                if (story != null)
+                {
+                    DrawBackstories(story);
+                }
+                else
+                {
+                    listing.Label("Backstory information not available.");
+                }
+
+                // Health Details
+                listing.GapLine();
+                listing.Label("Health:");
+
+                var health = selectedPawnWithStats.PawnInstance.health;
+                if (health != null)
+                {
+                    DrawHealthDetails(health);
+                }
+                else
+                {
+                    listing.Label("Health information not available.");
+                }
+
+                // Social Details
+                listing.GapLine();
+                listing.Label("Social:");
+
+                var social = selectedPawnWithStats.PawnInstance.relations;
+                if (social != null)
+                {
+                    DrawSocialDetails(social);
+                }
+                else
+                {
+                    listing.Label("Social information not available.");
                 }
             }
             else
@@ -199,6 +256,60 @@ namespace AllColonistsTab
                     GUI.color = Color.white;
                 }
                 listing.Gap(Text.LineHeight);
+            }
+        }
+
+        private void DrawTraits(TraitSet traits)
+        {
+            foreach (var trait in traits.allTraits)
+            {
+                string traitLabel = trait.LabelCap;
+                listing.Label(traitLabel);
+            }
+        }
+
+        private void DrawBackstories(Pawn_StoryTracker story)
+        {
+            string title = story.Title ?? "No title";
+            string childhood = story.Childhood?.TitleFor(selectedPawnWithStats.PawnInstance.gender).CapitalizeFirst() ?? "Unknown";
+            string adulthood = story.Adulthood?.TitleFor(selectedPawnWithStats.PawnInstance.gender).CapitalizeFirst() ?? "Unknown";
+
+            listing.Label($"Childhood: {childhood}");
+            listing.Label($"Adulthood: {adulthood}");
+        }
+
+        private void DrawHealthDetails(Pawn_HealthTracker health)
+        {
+            var hediffs = health.hediffSet.hediffs;
+            if (hediffs.Count > 0)
+            {
+                foreach (var hediff in hediffs)
+                {
+                    string hediffLabel = hediff.LabelCap;
+                    listing.Label(hediffLabel);
+                }
+            }
+            else
+            {
+                listing.Label("No health conditions.");
+            }
+        }
+
+        private void DrawSocialDetails(Pawn_RelationsTracker relations)
+        {
+            var directRelations = relations.DirectRelations;
+
+            if (directRelations != null && directRelations.Count > 0)
+            {
+                foreach (var rel in directRelations)
+                {
+                    string relationLabel = $"{rel.def.GetGenderSpecificLabel(rel.otherPawn)}: {rel.otherPawn.Name.ToStringFull}";
+                    listing.Label(relationLabel);
+                }
+            }
+            else
+            {
+                listing.Label("No social relationships.");
             }
         }
     }
