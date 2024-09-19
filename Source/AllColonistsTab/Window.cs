@@ -30,7 +30,8 @@ namespace AllColonistsTab
             deadPawns = PawnRetriever
                 .GetDeadPlayerPawns()
                 .Select(p => new PawnWithStats(p, tilePosition))
-                .OrderBy(p => p.PawnInstance.Corpse == null ? -1 : p.JoinTick);
+                .OrderBy(p => p.PawnInstance.Corpse == null ? -1 : p.JoinTick)
+                .ThenBy(p => p.PawnInstance.Name.ToStringFull);
         }
 
         public override void DoWindowContents(Rect inRect)
