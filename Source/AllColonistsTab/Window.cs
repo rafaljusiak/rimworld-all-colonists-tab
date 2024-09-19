@@ -8,8 +8,8 @@ namespace AllColonistsTab
 {
     internal class Window : MainTabWindow
     {
-        private readonly Listing_Standard listing = new Listing_Standard();
-        private Vector2 scrollPosition;
+        private Vector2 pawnDetailsScrollPosition;
+        private Vector2 pawnListScrollPosition;
         private PawnWithStats selectedPawnWithStats;
 
         private IEnumerable<PawnWithStats> alivePawns;
@@ -43,158 +43,165 @@ namespace AllColonistsTab
             Rect leftPanelRect = new Rect(0, 0, leftPanelWidth, inRect.height);
             Rect rightPanelRect = new Rect(leftPanelWidth, 0, rightPanelWidth, inRect.height);
 
-            DrawPawns(leftPanelRect, inRect, leftPanelWidth);
+            DrawPawns(leftPanelRect);
             DrawPawnDetails(rightPanelRect);
             DrawPawnGraphic(rightPanelRect);
         }
 
-        private void DrawPawns(Rect leftPanelRect, Rect inRect, float leftPanelWidth)
+        private void DrawPawns(Rect leftPanelRect)
         {
-            Rect scrollRect = new Rect(0, 0, leftPanelWidth, inRect.height - 50);
-            Rect viewRect = new Rect(0, 0, leftPanelWidth - 16, 1000);
+            float contentHeight = (alivePawns.Count() + deadPawns.Count() + 4) * (Text.LineHeight + 2);
+            Rect viewRect = new Rect(0, 0, leftPanelRect.width - 16, contentHeight);
 
-            Widgets.BeginScrollView(scrollRect, ref scrollPosition, viewRect);
+            Widgets.BeginScrollView(leftPanelRect, ref pawnListScrollPosition, viewRect);
 
-            listing.Begin(viewRect);
-            listing.Label("Alive colonists:");
+            float curY = 0f;
+
+            Widgets.Label(new Rect(0, curY, viewRect.width, Text.LineHeight), "Alive colonists:");
+            curY += Text.LineHeight + 2f;
 
             foreach (var p in alivePawns)
             {
-                if (Widgets.ButtonText(listing.GetRect(Text.LineHeight), p.PawnInstance.Name.ToStringFull))
+                if (Widgets.ButtonText(new Rect(0, curY, viewRect.width, Text.LineHeight), p.PawnInstance.Name.ToStringFull))
                 {
                     selectedPawnWithStats = p;
                 }
+                curY += Text.LineHeight + 2f;
             }
 
-            listing.GapLine();
-            listing.Label("Dead colonists:");
+            curY += 5f;
+            Widgets.DrawLineHorizontal(0, curY, viewRect.width);
+            curY += 5f;
+
+            Widgets.Label(new Rect(0, curY, viewRect.width, Text.LineHeight), "Dead colonists:");
+            curY += Text.LineHeight + 2f;
 
             foreach (var p in deadPawns)
             {
-                if (Widgets.ButtonText(listing.GetRect(Text.LineHeight), p.PawnInstance.Name.ToStringFull))
+                if (Widgets.ButtonText(new Rect(0, curY, viewRect.width, Text.LineHeight), p.PawnInstance.Name.ToStringFull))
                 {
                     selectedPawnWithStats = p;
                 }
+                curY += Text.LineHeight + 2f;
             }
 
-            listing.GapLine();
-            listing.Gap();
-
-            listing.End();
             Widgets.EndScrollView();
         }
 
         private void DrawPawnDetails(Rect rightPanelRect)
         {
-            listing.Begin(rightPanelRect);
+            float contentWidth = rightPanelRect.width - 16; // Allow for scroll bar
+            float curY = rightPanelRect.y;
+
             if (selectedPawnWithStats != null)
             {
                 if (selectedPawnWithStats.PawnInstance.Dead && selectedPawnWithStats.PawnInstance.Corpse == null)
                 {
-                    listing.Label($"No corpse found for {selectedPawnWithStats.PawnInstance.Name} -- cannot display details.");
-                    listing.End();
+                    Widgets.Label(new Rect(rightPanelRect.x, curY, contentWidth, Text.LineHeight), $"No corpse found for {selectedPawnWithStats.PawnInstance.Name} -- cannot display details.");
                     return;
                 }
 
                 Text.Font = GameFont.Medium;
                 string pawnName = selectedPawnWithStats.PawnInstance.Name.ToStringFull;
-                listing.Label(pawnName);
+                Widgets.Label(new Rect(rightPanelRect.x, curY, contentWidth, Text.LineHeight), pawnName);
+                curY += Text.LineHeight + 5f;
                 Text.Font = GameFont.Small;
 
+                float labelWidth = 120f;
+                float valueWidth = contentWidth - labelWidth - 10f;
+
+                // Born
                 var birthdayDate = selectedPawnWithStats.BirthdayDate;
-                listing.Label($"Born: {birthdayDate}");
+                DrawLabelValuePair(rightPanelRect.x, ref curY, labelWidth, valueWidth, "Born:", birthdayDate);
 
+                // Joined at
                 var joinDate = selectedPawnWithStats.JoinDate;
-                listing.Label($"Joined at: {joinDate}");
+                DrawLabelValuePair(rightPanelRect.x, ref curY, labelWidth, valueWidth, "Joined at:", joinDate);
 
+                // Died or Biological age
                 if (selectedPawnWithStats.PawnInstance.Dead)
                 {
-                    listing.Label($"Died: {selectedPawnWithStats.DeathDate} (aged {selectedPawnWithStats.BiologicalAge})");
+                    string deathInfo = $"{selectedPawnWithStats.DeathDate} (aged {selectedPawnWithStats.BiologicalAge})";
+                    DrawLabelValuePair(rightPanelRect.x, ref curY, labelWidth, valueWidth, "Died:", deathInfo);
                 }
                 else
                 {
-                    listing.Label($"Biological age: {selectedPawnWithStats.BiologicalAge}");
+                    DrawLabelValuePair(rightPanelRect.x, ref curY, labelWidth, valueWidth, "Biological age:", selectedPawnWithStats.BiologicalAge);
                 }
 
-                listing.Label($"Time as a colonist: {selectedPawnWithStats.TimeAsColonist}");
+                // Time as colonist
+                DrawLabelValuePair(rightPanelRect.x, ref curY, labelWidth, valueWidth, "Time as a colonist:", selectedPawnWithStats.TimeAsColonist);
 
-                listing.GapLine();
-                listing.Gap();
+                curY += 5f;
+                Widgets.DrawLineHorizontal(rightPanelRect.x, curY, contentWidth);
+                curY += 5f;
+
+                float scrollContentHeight = 2000f;
+                Rect scrollRect = new Rect(rightPanelRect.x, curY, contentWidth + 16f, rightPanelRect.height - (curY - rightPanelRect.y));
+                Rect viewRect = new Rect(0, 0, contentWidth, scrollContentHeight);
+
+                Widgets.BeginScrollView(scrollRect, ref pawnDetailsScrollPosition, viewRect);
+
+                float curYScroll = 0f;
 
                 // Skills
-                listing.Label("Skills:");
+                Widgets.Label(new Rect(0, curYScroll, viewRect.width, Text.LineHeight), "Skills:");
+                curYScroll += Text.LineHeight + 2f;
 
                 var skills = selectedPawnWithStats.PawnInstance.skills;
-                if (skills != null)
-                {
-                    DrawSkills(rightPanelRect, skills);
-                }
-                else
-                {
-                    listing.Label("Skills information not available.");
-                }
+                DrawSkills(ref curYScroll, viewRect.width, skills);
 
                 // Traits
-                listing.GapLine();
-                listing.Label("Traits:");
+                curYScroll += 5f;
+                Widgets.DrawLineHorizontal(0, curYScroll, viewRect.width);
+                curYScroll += 5f;
+
+                Widgets.Label(new Rect(0, curYScroll, viewRect.width, Text.LineHeight), "Traits:");
+                curYScroll += Text.LineHeight + 2f;
 
                 var traits = selectedPawnWithStats.PawnInstance.story?.traits;
-                if (traits != null)
-                {
-                    DrawTraits(traits);
-                }
-                else
-                {
-                    listing.Label("Traits information not available.");
-                }
+                DrawTraits(ref curYScroll, viewRect.width, traits);
 
                 // Backstories
-                listing.GapLine();
-                listing.Label("Backstories:");
+                curYScroll += 5f;
+                Widgets.DrawLineHorizontal(0, curYScroll, viewRect.width);
+                curYScroll += 5f;
+
+                Widgets.Label(new Rect(0, curYScroll, viewRect.width, Text.LineHeight), "Backstories:");
+                curYScroll += Text.LineHeight + 2f;
 
                 var story = selectedPawnWithStats.PawnInstance.story;
-                if (story != null)
-                {
-                    DrawBackstories(story);
-                }
-                else
-                {
-                    listing.Label("Backstory information not available.");
-                }
+                DrawBackstories(ref curYScroll, viewRect.width, story);
 
                 // Health Details
-                listing.GapLine();
-                listing.Label("Health:");
+                curYScroll += 5f;
+                Widgets.DrawLineHorizontal(0, curYScroll, viewRect.width);
+                curYScroll += 5f;
+
+                Widgets.Label(new Rect(0, curYScroll, viewRect.width, Text.LineHeight), "Health:");
+                curYScroll += Text.LineHeight + 2f;
 
                 var health = selectedPawnWithStats.PawnInstance.health;
-                if (health != null)
-                {
-                    DrawHealthDetails(health);
-                }
-                else
-                {
-                    listing.Label("Health information not available.");
-                }
+                DrawHealthDetails(ref curYScroll, viewRect.width, health);
 
                 // Social Details
-                listing.GapLine();
-                listing.Label("Social:");
+                curYScroll += 5f;
+                Widgets.DrawLineHorizontal(0, curYScroll, viewRect.width);
+                curYScroll += 5f;
+
+                Widgets.Label(new Rect(0, curYScroll, viewRect.width, Text.LineHeight), "Social:");
+                curYScroll += Text.LineHeight + 2f;
 
                 var social = selectedPawnWithStats.PawnInstance.relations;
-                if (social != null)
-                {
-                    DrawSocialDetails(social);
-                }
-                else
-                {
-                    listing.Label("Social information not available.");
-                }
+                DrawSocialDetails(ref curYScroll, viewRect.width, social);
+
+                Widgets.EndScrollView();
             }
             else
             {
-                listing.Label("Select a pawn to see details.");
+                Widgets.Label(new Rect(rightPanelRect.x, curY, contentWidth, Text.LineHeight), "Select a pawn to see details.");
+                curY += Text.LineHeight + 2f;
             }
-            listing.End();
         }
 
         private void DrawPawnGraphic(Rect rightPanelRect)
@@ -219,13 +226,21 @@ namespace AllColonistsTab
                 if (Widgets.ButtonText(buttonRect, "Focus"))
                 {
                     CameraJumper.TryJumpAndSelect(selectedPawnWithStats.PawnInstance);
+                    Find.WindowStack.TryRemove(this);
                 }
             }
         }
 
-        private void DrawSkills(Rect rightPanelRect, Pawn_SkillTracker skills)
+        private void DrawSkills(ref float curY, float width, Pawn_SkillTracker skills)
         {
-            float columnWidth = rightPanelRect.width / 3f;
+            if (skills == null || skills.skills == null)
+            {
+                Widgets.Label(new Rect(0, curY, width, Text.LineHeight), "Skills information not available.");
+                curY += Text.LineHeight + 2f;
+                return;
+            }
+
+            float columnWidth = width / 3f;
             int skillsPerColumn = Mathf.CeilToInt(skills.skills.Count / 3f);
 
             for (int i = 0; i < skillsPerColumn; i++)
@@ -236,6 +251,11 @@ namespace AllColonistsTab
                     if (skillIndex >= skills.skills.Count) break;
 
                     var skill = skills.skills[skillIndex];
+                    if (skill == null || skill.def == null)
+                    {
+                        continue;
+                    }
+
                     string skillLabel = skill.def.label.CapitalizeFirst();
                     int skillLevel = skill.Level;
 
@@ -246,71 +266,156 @@ namespace AllColonistsTab
                         _ => Color.red
                     };
 
-                    Rect skillRect = new Rect(col * columnWidth, listing.CurHeight, columnWidth, Text.LineHeight);
+                    Rect skillRect = new Rect(col * columnWidth, curY, columnWidth, Text.LineHeight);
 
                     Widgets.Label(new Rect(skillRect.x, skillRect.y, columnWidth * 0.6f, skillRect.height), $"{skillLabel}: ");
 
                     GUI.color = skillColor;
                     Widgets.Label(new Rect(skillRect.x + columnWidth * 0.6f, skillRect.y, columnWidth * 0.4f, skillRect.height), skillLevel.ToString());
-
                     GUI.color = Color.white;
                 }
-                listing.Gap(Text.LineHeight);
+                curY += Text.LineHeight + 2f;
             }
         }
 
-        private void DrawTraits(TraitSet traits)
+        private void DrawTraits(ref float curY, float width, TraitSet traits)
         {
+            if (traits == null || traits.allTraits == null)
+            {
+                Widgets.Label(new Rect(0, curY, width, Text.LineHeight), "Traits information not available.");
+                curY += Text.LineHeight + 2f;
+                return;
+            }
+
+            float startX = 0f;
+            float curX = startX;
+            float maxWidth = width;
+
             foreach (var trait in traits.allTraits)
             {
+                if (trait == null)
+                {
+                    continue;
+                }
+
                 string traitLabel = trait.LabelCap;
-                listing.Label(traitLabel);
+                Vector2 size = Text.CalcSize(traitLabel) + new Vector2(10f, 0f);
+
+                if (curX + size.x > maxWidth)
+                {
+                    curX = startX;
+                    curY += Text.LineHeight + 2f;
+                }
+
+                Rect traitRect = new Rect(curX, curY, size.x, Text.LineHeight);
+                Widgets.Label(traitRect, traitLabel);
+
+                curX += size.x + 5f;
             }
+
+            curY += Text.LineHeight + 2f;
         }
 
-        private void DrawBackstories(Pawn_StoryTracker story)
+        private void DrawBackstories(ref float curY, float width, Pawn_StoryTracker story)
         {
-            string title = story.Title ?? "No title";
-            string childhood = story.Childhood?.TitleFor(selectedPawnWithStats.PawnInstance.gender).CapitalizeFirst() ?? "Unknown";
-            string adulthood = story.Adulthood?.TitleFor(selectedPawnWithStats.PawnInstance.gender).CapitalizeFirst() ?? "Unknown";
+            if (story == null)
+            {
+                Widgets.Label(new Rect(0, curY, width, Text.LineHeight), "Backstory information not available.");
+                curY += Text.LineHeight + 2f;
+                return;
+            }
 
-            listing.Label($"Childhood: {childhood}");
-            listing.Label($"Adulthood: {adulthood}");
+            float labelWidth = 120f;
+            float valueWidth = width - labelWidth - 10f;
+
+            string childhood = story.Childhood != null ? story.Childhood.TitleFor(selectedPawnWithStats.PawnInstance.gender).CapitalizeFirst() : "Unknown";
+            string adulthood = story.Adulthood != null ? story.Adulthood.TitleFor(selectedPawnWithStats.PawnInstance.gender).CapitalizeFirst() : "Unknown";
+
+            DrawLabelValuePair(0, ref curY, labelWidth, valueWidth, "Childhood:", childhood);
+            DrawLabelValuePair(0, ref curY, labelWidth, valueWidth, "Adulthood:", adulthood);
         }
 
-        private void DrawHealthDetails(Pawn_HealthTracker health)
+        private void DrawHealthDetails(ref float curY, float width, Pawn_HealthTracker health)
         {
+            if (health == null || health.hediffSet == null || health.hediffSet.hediffs == null)
+            {
+                Widgets.Label(new Rect(0, curY, width, Text.LineHeight), "Health information not available.");
+                curY += Text.LineHeight + 2f;
+                return;
+            }
+
             var hediffs = health.hediffSet.hediffs;
             if (hediffs.Count > 0)
             {
                 foreach (var hediff in hediffs)
                 {
+                    if (hediff == null)
+                    {
+                        continue;
+                    }
+
                     string hediffLabel = hediff.LabelCap;
-                    listing.Label(hediffLabel);
+                    string bodyPartLabel = hediff.Part != null ? hediff.Part.LabelCap : "Whole body";
+                    string severityLabel = hediff.SeverityLabel;
+
+                    string label = $"{hediffLabel} ({bodyPartLabel})";
+                    if (!string.IsNullOrEmpty(severityLabel))
+                    {
+                        label += $" - Severity: {severityLabel}";
+                    }
+
+                    Widgets.Label(new Rect(0, curY, width, Text.LineHeight), label);
+                    curY += Text.LineHeight + 2f;
                 }
             }
             else
             {
-                listing.Label("No health conditions.");
+                Widgets.Label(new Rect(0, curY, width, Text.LineHeight), "No health conditions.");
+                curY += Text.LineHeight + 2f;
             }
         }
 
-        private void DrawSocialDetails(Pawn_RelationsTracker relations)
+        private void DrawSocialDetails(ref float curY, float width, Pawn_RelationsTracker relations)
         {
+            if (relations == null || relations.DirectRelations == null)
+            {
+                Widgets.Label(new Rect(0, curY, width, Text.LineHeight), "Social information not available.");
+                curY += Text.LineHeight + 2f;
+                return;
+            }
+
             var directRelations = relations.DirectRelations;
 
             if (directRelations != null && directRelations.Count > 0)
             {
                 foreach (var rel in directRelations)
                 {
-                    string relationLabel = $"{rel.def.GetGenderSpecificLabel(rel.otherPawn)}: {rel.otherPawn.Name.ToStringFull}";
-                    listing.Label(relationLabel);
+                    if (rel == null || rel.def == null || rel.otherPawn == null)
+                    {
+                        // TODO: find a way to get rid of this
+                        continue;
+                    }
+
+                    string relationType = rel.def.GetGenderSpecificLabel(rel.otherPawn)?.CapitalizeFirst() ?? "Unknown relation";
+                    string otherPawnName = rel.otherPawn.Name?.ToStringFull ?? "Unnamed pawn";
+                    string relationLabel = $"{relationType}: {otherPawnName}";
+
+                    Widgets.Label(new Rect(0, curY, width, Text.LineHeight), relationLabel);
+                    curY += Text.LineHeight + 2f;
                 }
             }
             else
             {
-                listing.Label("No social relationships.");
+                Widgets.Label(new Rect(0, curY, width, Text.LineHeight), "No social relationships.");
+                curY += Text.LineHeight + 2f;
             }
+        }
+
+        private void DrawLabelValuePair(float x, ref float curY, float labelWidth, float valueWidth, string label, string value)
+        {
+            Widgets.Label(new Rect(x, curY, labelWidth, Text.LineHeight), label);
+            Widgets.Label(new Rect(x + labelWidth + 10f, curY, valueWidth, Text.LineHeight), value);
+            curY += Text.LineHeight + 2f;
         }
     }
 }
