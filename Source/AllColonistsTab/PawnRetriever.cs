@@ -9,28 +9,28 @@ namespace AllColonistsTab
     {
         public static IEnumerable<Pawn> GetAlivePlayerPawns()
         {
-            List<Pawn> pawns = new List<Pawn>();
-
-            foreach (Map map in Find.Maps)
-            {
-                if (map?.mapPawns?.AllPawns != null)
-                {
-                    foreach (Pawn pawn in map.mapPawns.AllPawns)
-                    {
-                        if (pawn?.Name != null && pawn.Faction == Faction.OfPlayer && pawn.def == ThingDefOf.Human)
-                        {
-                            pawns.Add(pawn);
-                        }
-                    }
-                }
-            }
-
-            return pawns;
+            return PawnsFinder.AllMapsCaravansAndTravelingTransportPods_Alive_Colonists;
         }
 
         public static IEnumerable<Pawn> GetDeadPlayerPawns()
         {
-            return Find.WorldPawns.AllPawnsDead.Where((Pawn p) => p.IsColonist);
+            var deadWorldPawns = Find.WorldPawns.AllPawnsDead
+                .Where(pawn => IsPlayerPawn(pawn));
+
+            var deadMapPawns = Find.Maps
+                .SelectMany(map => map.mapPawns.AllPawnsSpawned)
+                .Where(pawn => pawn.Dead && IsPlayerPawn(pawn));
+
+            return deadWorldPawns.Concat(deadMapPawns).Distinct();
+        }
+
+        private static bool IsPlayerPawn(Pawn pawn)
+        {
+            return pawn != null
+                && pawn.def == ThingDefOf.Human
+                && pawn.Faction == Faction.OfPlayer
+                && !pawn.IsSlave
+                && !pawn.IsPrisoner;
         }
     }
 }
