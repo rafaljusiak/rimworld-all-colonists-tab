@@ -3,7 +3,7 @@ using Verse;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace AllColonistsTab.Winow
+namespace AllColonistsTab.Window
 {
     public static class HealthDetailsDrawer
     {

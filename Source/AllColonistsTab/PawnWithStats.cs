@@ -33,26 +33,21 @@ namespace AllColonistsTab
             }
         }
 
-
         public string JoinDate
         {
             get
             {
                 try
                 {
-                    if (PawnInstance.Dead)
-                    {
-                        if (PawnInstance.Corpse == null)
-                        {
-                            return "Join date unknown (no corpse)";
-                        }
+                    int joinTick = JoinTick;
 
-                        int joinTick = deathTick - timeAsColonist;
+                    if (joinTick > 0)
+                    {
                         return GenDate.DateFullStringAt(joinTick, tilePosition);
                     }
                     else
                     {
-                        return GenDate.DateFullStringAt(JoinTick, tilePosition);
+                        return "Join date unknown";
                     }
                 }
                 catch (Exception ex)
@@ -69,11 +64,14 @@ namespace AllColonistsTab
             {
                 try
                 {
-                    int joinTick;
-                    float timeAsColonistSeconds = PawnInstance.records.GetValue(RecordDefOf.TimeAsColonistOrColonyAnimal);
+                    int timeAsColonistTicks = PawnInstance.records.GetAsInt(RecordDefOf.TimeAsColonistOrColonyAnimal);
 
-                    int timeAsColonistSecondsRounded = Mathf.RoundToInt(timeAsColonistSeconds);
-                    int timeAsColonistTicks = timeAsColonistSecondsRounded * 60;
+                    if (timeAsColonistTicks <= 0)
+                    {
+                        return 0;
+                    }
+
+                    int joinTick;
 
                     if (PawnInstance.Dead)
                     {
@@ -87,11 +85,11 @@ namespace AllColonistsTab
                     }
                     else
                     {
-                        int currentTick = Find.TickManager.TicksGame;
+                        int currentTick = Find.TickManager.TicksAbs;
                         joinTick = currentTick - timeAsColonistTicks;
                     }
 
-                    if (joinTick < 0)
+                    if (joinTick <= 0)
                     {
                         return 0;
                     }
@@ -119,7 +117,7 @@ namespace AllColonistsTab
 
         public string TimeAsColonist
         {
-            get { return convertTicksToTimePeriod(timeAsColonist); }
+            get { return ConvertTicksToTimePeriod(timeAsColonistTicks); }
         }
 
         public string BiologicalAge
@@ -127,18 +125,38 @@ namespace AllColonistsTab
             get { return PawnInstance.ageTracker.AgeBiologicalYears.ToString(); }
         }
 
-        private int timeAsColonist { get { return PawnInstance.records.GetAsInt(RecordDefOf.TimeAsColonistOrColonyAnimal); } }
-        private long birthdayTick { get { return PawnInstance.ageTracker.BirthAbsTicks; } }
-        private int deathTick { get { return GenTicks.TicksAbs - PawnInstance.Corpse.Age; } }
+        private int timeAsColonistTicks
+        {
+            get
+            {
+                return PawnInstance.records.GetAsInt(RecordDefOf.TimeAsColonistOrColonyAnimal);
+            }
+        }
 
-        private string convertTicksToTimePeriod(long ticks)
+        private long birthdayTick { get { return PawnInstance.ageTracker.BirthAbsTicks; } }
+        private int deathTick
+        {
+            get
+            {
+                if (PawnInstance.Corpse != null)
+                {
+                    return GenTicks.TicksAbs - PawnInstance.Corpse.Age;
+                }
+                else
+                {
+                    // Estimate death tick if corpse is missing
+                    return GenTicks.TicksAbs - timeAsColonistTicks;
+                }
+            }
+        }
+
+        private string ConvertTicksToTimePeriod(long ticks)
         {
             long years = ticks / GenDate.TicksPerYear;
             ticks %= GenDate.TicksPerYear;
 
-            int ticksPerMonth = 15 * GenDate.TicksPerDay;
-            long months = ticks / (15 * GenDate.TicksPerDay);
-            ticks %= ticksPerMonth;
+            long months = ticks / GenDate.TicksPerTwelfth;
+            ticks %= GenDate.TicksPerTwelfth;
 
             long days = ticks / GenDate.TicksPerDay;
             return $"{years} years, {months} months, {days} days";
