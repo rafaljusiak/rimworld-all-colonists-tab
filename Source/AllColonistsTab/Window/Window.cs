@@ -158,7 +158,7 @@ namespace AllColonistsTab.Window
                 // Health Details
                 UIDrawer.DrawSeparator(ref curYScroll, viewRect.width);
                 UIDrawer.DrawSectionHeader(ref curYScroll, viewRect.width, "Health:");
-                HealthDetailsDrawer.DrawHealthDetails(ref curYScroll, viewRect.width, selectedPawnWithStats.PawnInstance.health);
+                HealthDetailsDrawer.DrawHealthDetails(ref curYScroll, viewRect.width, selectedPawnWithStats.PawnInstance);
 
                 // Relationships
                 UIDrawer.DrawSeparator(ref curYScroll, viewRect.width);
