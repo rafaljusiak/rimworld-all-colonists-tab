@@ -25,13 +25,15 @@ namespace AllColonistsTab.Window
                 .GetAlivePlayerPawns()
                 .Select(p => new PawnWithStats(p, tilePosition))
                 .OrderBy(p => p.JoinTick)
-                .ThenBy(p => p.PawnInstance.Name.ToStringFull);
+                .ThenBy(p => p.PawnInstance.Name.ToStringFull)
+                .ToList();
 
             deadPawns = PawnRetriever
                 .GetDeadPlayerPawns()
                 .Select(p => new PawnWithStats(p, tilePosition))
                 .OrderBy(p => p.PawnInstance.Corpse == null ? -1 : p.JoinTick)
-                .ThenBy(p => p.PawnInstance.Name.ToStringFull);
+                .ThenBy(p => p.PawnInstance.Name.ToStringFull)
+                .ToList();
         }
 
         public override void DoWindowContents(Rect inRect)
@@ -130,6 +132,12 @@ namespace AllColonistsTab.Window
                 }
 
                 UIDrawer.DrawLabelValuePair(rightPanelRect.x, ref curY, labelWidth, valueWidth, "Time as a colonist:", selectedPawnWithStats.TimeAsColonist);
+
+                if (selectedPawnWithStats.PawnInstance.Faction != Faction.OfPlayer)
+                {
+                    string factionName = selectedPawnWithStats.PawnInstance.Faction?.Name ?? "No Faction";
+                    UIDrawer.DrawLabelValuePair(rightPanelRect.x, ref curY, labelWidth, valueWidth, "Faction:", factionName);
+                }
 
                 UIDrawer.DrawSeparator(ref curY, rightPanelRect.x, contentWidth);
 

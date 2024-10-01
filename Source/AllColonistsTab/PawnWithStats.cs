@@ -11,10 +11,60 @@ namespace AllColonistsTab
         public Pawn PawnInstance;
         private Vector2 tilePosition;
 
+        // Cached JoinTick
+        public int JoinTick { get; private set; }
+
         public PawnWithStats(Pawn p, Vector2 tilePosition)
         {
             PawnInstance = p;
             this.tilePosition = tilePosition;
+
+            // Calculate and store JoinTick
+            JoinTick = CalculateJoinTick();
+        }
+
+        private int CalculateJoinTick()
+        {
+            try
+            {
+                int timeAsColonistTicks = PawnInstance.records.GetAsInt(RecordDefOf.TimeAsColonistOrColonyAnimal);
+
+                if (timeAsColonistTicks <= 0)
+                {
+                    return 0;
+                }
+
+                int joinTick;
+
+                if (PawnInstance.Dead)
+                {
+                    if (PawnInstance.Corpse == null)
+                    {
+                        return 0;
+                    }
+
+                    int deathTick = this.deathTick;
+                    joinTick = deathTick - timeAsColonistTicks;
+                }
+                else
+                {
+                    // Use the tick count at the time of calculation
+                    int currentTickAtCalculation = Find.TickManager.TicksAbs;
+                    joinTick = currentTickAtCalculation - timeAsColonistTicks;
+                }
+
+                if (joinTick <= 0)
+                {
+                    return 0;
+                }
+
+                return joinTick;
+            }
+            catch (Exception ex)
+            {
+                Log.Error($"Error calculating join tick for pawn {PawnInstance.Name}: {ex.Message}");
+                return 0;
+            }
         }
 
         public string BirthdayDate
@@ -39,11 +89,9 @@ namespace AllColonistsTab
             {
                 try
                 {
-                    int joinTick = JoinTick;
-
-                    if (joinTick > 0)
+                    if (JoinTick > 0)
                     {
-                        return GenDate.DateFullStringAt(joinTick, tilePosition);
+                        return GenDate.DateFullStringAt(JoinTick, tilePosition);
                     }
                     else
                     {
@@ -54,52 +102,6 @@ namespace AllColonistsTab
                 {
                     Log.Error($"Error retrieving join date for pawn {PawnInstance.Name}: {ex.Message}");
                     return "Join date unknown";
-                }
-            }
-        }
-
-        public int JoinTick
-        {
-            get
-            {
-                try
-                {
-                    int timeAsColonistTicks = PawnInstance.records.GetAsInt(RecordDefOf.TimeAsColonistOrColonyAnimal);
-
-                    if (timeAsColonistTicks <= 0)
-                    {
-                        return 0;
-                    }
-
-                    int joinTick;
-
-                    if (PawnInstance.Dead)
-                    {
-                        if (PawnInstance.Corpse == null)
-                        {
-                            return 0;
-                        }
-
-                        int deathTick = this.deathTick;
-                        joinTick = deathTick - timeAsColonistTicks;
-                    }
-                    else
-                    {
-                        int currentTick = Find.TickManager.TicksAbs;
-                        joinTick = currentTick - timeAsColonistTicks;
-                    }
-
-                    if (joinTick <= 0)
-                    {
-                        return 0;
-                    }
-
-                    return joinTick;
-                }
-                catch (Exception ex)
-                {
-                    Log.Error($"Error retrieving join tick for pawn {PawnInstance.Name}: {ex.Message}");
-                    return 0;
                 }
             }
         }
