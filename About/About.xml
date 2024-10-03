@@ -6,7 +6,7 @@
 		<li>1.5</li>
 	</supportedVersions>
 	<packageId>rafaljusiak.allcoloniststab</packageId>
-	<description>A simple tab that provides key information about both living and dead colonists. This is an early version of the mod, so it currently offers a limited set of information. However, I plan to add more feature over time, and your suggestions are highly welcome!</description>
+	<description>A simple tab that provides key information about both living and dead colonists.</description>
 	<modDependencies>
 		<li>
 			<packageId>brrainz.harmony</packageId>
